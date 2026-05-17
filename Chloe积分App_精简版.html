@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Chloe积分">
+<title>Chloe 家庭积分</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --pink:#F06292;--pink-l:#FCE4EC;--pink-d:#C2185B;
+  --green:#43A047;--green-l:#E8F5E9;--green-d:#2E7D32;
+  --gold:#F9A825;--gold-l:#FFFDE7;--gold-d:#E65100;
+  --red:#E53935;--red-l:#FFEBEE;--red-d:#B71C1C;
+  --blue:#1E88E5;--blue-l:#E3F2FD;
+  --gray:#757575;--gray-l:#F5F5F5;--gray-d:#424242;
+  --bg:#FFF9F5;--r:16px;--sh:0 2px 12px rgba(0,0,0,0.08);
+}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:#333;min-height:100vh}
+.page{display:none;min-height:100vh;padding-bottom:84px}
+.page.on{display:block}
+
+/* TOP BAR */
+.bar{background:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 1px 6px rgba(0,0,0,0.07);position:sticky;top:0;z-index:100}
+.bar-title{font-size:18px;font-weight:800;color:var(--pink-d)}
+.bar-sub{font-size:11px;color:var(--gray);font-weight:600;margin-top:1px}
+.iBtn{width:34px;height:34px;border:none;background:var(--gray-l);border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;
+  box-shadow:0 -2px 10px rgba(0,0,0,0.09);z-index:200;padding-bottom:env(safe-area-inset-bottom)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 4px;
+  cursor:pointer;border:none;background:none;color:var(--gray);
+  font-family:'Nunito',sans-serif;font-size:10px;font-weight:700;transition:color .2s}
+.ni.on{color:var(--pink)}
+.ni .ic{font-size:22px;margin-bottom:2px}
+
+/* HERO */
+.hero{border-radius:22px;margin:14px;padding:22px 20px;color:#fff;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:attr(data-bg);position:absolute;right:-10px;top:-10px;font-size:80px;opacity:.12;line-height:1}
+.hl{font-size:12px;font-weight:700;opacity:.9;margin-bottom:4px}
+.hn{font-size:64px;font-weight:900;line-height:1}
+.hsub{font-size:12px;opacity:.85;margin-top:4px}
+.hbar-w{background:rgba(255,255,255,.25);border-radius:6px;height:9px;margin-top:14px;overflow:hidden}
+.hbar{height:100%;background:#fff;border-radius:6px;transition:width .6s ease}
+
+/* CARDS */
+.card{background:#fff;border-radius:var(--r);padding:14px 16px;margin:0 14px 12px;box-shadow:var(--sh)}
+.ct{font-size:13px;font-weight:800;color:var(--gray-d);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+
+/* BUTTONS */
+.btn{display:block;width:100%;padding:13px;border:none;border-radius:13px;
+  font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;text-align:center}
+.btn-pink{background:var(--pink);color:#fff}.btn-pink:active{background:var(--pink-d);transform:scale(.97)}
+.btn-green{background:var(--green);color:#fff}.btn-green:active{background:var(--green-d);transform:scale(.97)}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:active{transform:scale(.97)}
+.btn-red{background:var(--red);color:#fff}.btn-red:active{transform:scale(.97)}
+.btn-gray{background:var(--gray-l);color:var(--gray-d)}
+.btn-outline{background:transparent;color:var(--pink);border:2.5px solid var(--pink)}
+.btn-sm{padding:8px 14px;font-size:12px;width:auto;display:inline-block;border-radius:10px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.mb8{margin-bottom:8px}
+
+/* ENTRY ROW */
+.erow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F2F2F2}
+.erow:last-child{border-bottom:none}
+.ebox{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ebox.p{background:var(--green-l)}.ebox.m{background:var(--red-l)}
+.einfo{flex:1;min-width:0}
+.edesc{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emeta{font-size:10px;color:var(--gray);margin-top:2px}
+.epts{font-size:16px;font-weight:900;flex-shrink:0}
+.epts.p{color:var(--green)}.epts.m{color:var(--red)}
+.edel{background:var(--red-l);border:none;color:var(--red);border-radius:7px;width:26px;height:26px;cursor:pointer;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+
+/* FORM */
+.fg{margin-bottom:14px}
+.fl{font-size:12px;font-weight:800;color:var(--gray-d);margin-bottom:5px;display:block}
+.fi{width:100%;padding:11px 13px;border:2px solid #E0E0E0;border-radius:11px;
+  font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;outline:none;background:#fff;transition:border .2s}
+.fi:focus{border-color:var(--pink)}
+.fta{min-height:72px;resize:none}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+.chip{padding:7px 11px;border-radius:18px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .15s;line-height:1.3}
+.chip.p{background:var(--green-l);color:var(--green-d)}
+.chip.p.sel{background:var(--green);color:#fff}
+.chip.m{background:var(--red-l);color:var(--red-d)}
+.chip.m.sel{background:var(--red);color:#fff}
+
+/* TABS */
+.tabs{display:flex;background:var(--gray-l);border-radius:11px;padding:3px;margin-bottom:14px}
+.tab{flex:1;padding:8px 4px;border:none;background:transparent;border-radius:9px;
+  font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;transition:all .2s}
+.tab.on{background:#fff;color:var(--pink-d);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+
+/* SUMMARY GRID */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 14px 12px}
+.sc{border-radius:12px;padding:12px;text-align:center}
+.sc .sn{font-size:26px;font-weight:900}
+.sc .sl{font-size:10px;font-weight:700;margin-top:2px;opacity:.85}
+
+/* ALLOWANCE BREAKDOWN */
+.allow-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #F5F5F5;font-size:13px}
+.allow-row:last-child{border-bottom:none}
+.allow-label{color:var(--gray-d);font-weight:600}
+.allow-val{font-weight:800}
+
+/* GOOSE CALC */
+.gcalc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px;border-bottom:1px solid #F5F5F5}
+.gcalc-row:last-child{border-bottom:none}
+.gcalc-label{color:var(--gray-d)}
+.gcalc-val{font-weight:800}
+
+/* MILESTONE */
+.ms-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F5F5F5}
+.ms-row:last-child{border-bottom:none}
+.ms-check{width:22px;height:22px;border-radius:6px;border:2.5px solid var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;transition:all .2s}
+.ms-check.done{background:var(--gold);border-color:var(--gold);color:#fff}
+.ms-label{flex:1;font-size:13px;font-weight:700;color:var(--gray-d)}
+.ms-reward{font-size:13px;font-weight:800;color:var(--gold-d)}
+
+/* HISTORY */
+.hw{border-radius:13px;padding:12px 14px;margin:0 14px 8px;background:#fff;
+  box-shadow:var(--sh);display:flex;align-items:center;gap:10px;cursor:pointer}
+.hwsc{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff;flex-shrink:0}
+.hwdate{font-size:11px;color:var(--gray);font-weight:600}
+.hwtitle{font-size:14px;font-weight:800;margin-top:1px}
+.hwallow{font-size:14px;font-weight:900;color:var(--green)}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:flex-end}
+.mo.open{display:flex}
+.mbox{background:#fff;border-radius:22px 22px 0 0;width:100%;max-height:92vh;
+  overflow-y:auto;padding:18px;padding-bottom:calc(18px + env(safe-area-inset-bottom))}
+.mhandle{width:34px;height:4px;background:#E0E0E0;border-radius:2px;margin:0 auto 14px}
+.mtitle{font-size:17px;font-weight:800;margin-bottom:14px}
+
+/* LOCK */
+#lock{background:linear-gradient(160deg,#FCE4EC,#F3E5F5,#E3F2FD);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:28px}
+.lk-pig{font-size:72px;margin-bottom:12px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.lk-title{font-size:26px;font-weight:900;color:var(--pink-d);margin-bottom:4px;text-align:center}
+.lk-sub{font-size:13px;color:var(--gray);margin-bottom:28px;text-align:center}
+.pdots{display:flex;gap:14px;margin-bottom:18px;justify-content:center}
+.pdot{width:15px;height:15px;border-radius:50%;border:2.5px solid var(--pink);transition:background .2s}
+.pdot.on{background:var(--pink)}
+.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:264px}
+.pkey{height:62px;border:none;border-radius:14px;background:#fff;font-family:'Nunito',sans-serif;
+  font-size:24px;font-weight:800;color:var(--pink-d);cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);transition:all .15s;display:flex;align-items:center;justify-content:center}
+.pkey:active{transform:scale(.9);background:var(--pink-l)}
+.perr{color:var(--red);font-size:13px;font-weight:700;min-height:18px;margin-bottom:6px;text-align:center}
+
+/* RULES EDITOR */
+.rule-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F5F5F5}
+.rule-row:last-child{border-bottom:none}
+.rule-desc{flex:1;font-size:13px;font-weight:600;color:var(--gray-d)}
+.rule-pts{font-size:13px;font-weight:800;min-width:38px;text-align:right}
+.rule-pts.p{color:var(--green)}.rule-pts.m{color:var(--red)}
+.rule-del{background:var(--red-l);border:none;color:var(--red);border-radius:7px;width:26px;height:26px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px}
+.cat-label{font-size:11px;font-weight:800;padding:3px 9px;border-radius:12px;display:inline-block;margin:8px 0 4px}
+
+/* TOAST */
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#333;color:#fff;
+  padding:9px 18px;border-radius:18px;font-size:13px;font-weight:700;z-index:9999;
+  opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* UTILS */
+.row{display:flex;align-items:center}
+.jb{justify-content:space-between}.fw{flex:1}
+.tc{text-align:center}
+.empty{text-align:center;padding:32px 16px;color:var(--gray)}
+.empty .ei{font-size:44px;margin-bottom:8px}
+.empty .et{font-size:13px;font-weight:600}
+.setting-row{display:flex;align-items:center;padding:13px 16px;background:#fff;border-bottom:1px solid #F5F5F5;cursor:pointer}
+.setting-row:first-child{border-radius:13px 13px 0 0}
+.setting-row:last-child{border-radius:0 0 13px 13px;border-bottom:none}
+.si{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-right:10px;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock">
+  <div class="lk-pig">🐷</div>
+  <div class="lk-title">Chloe 家庭积分</div>
+  <div class="lk-sub">请输入密码</div>
+  <div class="pdots">
+    <div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div>
+    <div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div>
+  </div>
+  <div class="perr" id="perr"></div>
+  <div class="ppad">
+    <button class="pkey" onclick="pk('1')">1</button>
+    <button class="pkey" onclick="pk('2')">2</button>
+    <button class="pkey" onclick="pk('3')">3</button>
+    <button class="pkey" onclick="pk('4')">4</button>
+    <button class="pkey" onclick="pk('5')">5</button>
+    <button class="pkey" onclick="pk('6')">6</button>
+    <button class="pkey" onclick="pk('7')">7</button>
+    <button class="pkey" onclick="pk('8')">8</button>
+    <button class="pkey" onclick="pk('9')">9</button>
+    <button class="pkey" style="opacity:0;pointer-events:none"></button>
+    <button class="pkey" onclick="pk('0')">0</button>
+    <button class="pkey" onclick="pdel()" style="color:var(--gray)">⌫</button>
+  </div>
+  <div style="margin-top:14px;font-size:11px;color:var(--gray);text-align:center">首次使用默认密码：1234</div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="main" style="display:none">
+
+<!-- ── 积分页 ── -->
+<div id="pgScore" class="page on">
+  <div class="bar">
+    <div>
+      <div class="bar-title">⭐ 本周积分</div>
+      <div class="bar-sub" id="weekLabel">本周</div>
+    </div>
+    <button class="iBtn" onclick="openMo('moLock')">🔒</button>
+  </div>
+
+  <!-- score hero -->
+  <div class="hero" data-bg="🐷" style="background:linear-gradient(135deg,#F06292,#E91E63);margin-top:14px">
+    <div class="hl">本周总积分</div>
+    <div class="hn" id="heroScore">75</div>
+    <div class="hsub">基础75 + <span id="hPlus">0</span> 加分 − <span id="hMinus">0</span> 扣分</div>
+    <div class="hbar-w"><div class="hbar" id="hBar" style="width:75%"></div></div>
+  </div>
+
+  <!-- plus/minus summary -->
+  <div class="sgrid">
+    <div class="sc" style="background:var(--green-l)">
+      <div class="sn" style="color:var(--green-d)" id="sPlus">+0</div>
+      <div class="sl" style="color:var(--green-d)">本周亮点</div>
+    </div>
+    <div class="sc" style="background:var(--red-l)">
+      <div class="sn" style="color:var(--red-d)" id="sMinus">−0</div>
+      <div class="sl" style="color:var(--red-d)">本周越界</div>
+    </div>
+  </div>
+
+  <!-- entry list -->
+  <div class="card">
+    <div class="ct row jb">
+      <span>📋 本周记录 <span id="eCnt" style="background:var(--pink-l);color:var(--pink-d);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:800">0条</span></span>
+    </div>
+    <div id="entryList"></div>
+  </div>
+
+  <!-- actions -->
+  <div style="margin:0 14px">
+    <button class="btn btn-pink" onclick="openAddMo()">＋ 记录亮点 / 越界行为</button>
+    <button class="btn btn-outline mt8" onclick="goReview()">📊 周日复盘结算</button>
+  </div>
+</div>
+
+<!-- ── 金鹅页 ── -->
+<div id="pgGoose" class="page">
+  <div class="bar">
+    <div>
+      <div class="bar-title">🦢 金鹅账户</div>
+      <div class="bar-sub">长期储蓄 · 月底生小金蛋</div>
+    </div>
+  </div>
+
+  <!-- balance hero -->
+  <div class="hero" data-bg="🥚" style="background:linear-gradient(135deg,#FFD54F,#F9A825);margin-top:14px">
+    <div class="hl" style="color:#5D4037">金鹅账户余额</div>
+    <div class="hn" style="color:#5D4037" id="gooseHero">0</div>
+    <div class="hsub" style="color:#5D4037">元（从支付宝查询后更新）</div>
+  </div>
+
+  <!-- update balance -->
+  <div class="card">
+    <div class="ct">📲 更新余额</div>
+    <div style="font-size:12px;color:var(--gray);margin-bottom:10px">查看支付宝金鹅账户后，在这里填入最新余额</div>
+    <div class="row gap8" style="gap:8px">
+      <input type="number" class="fi fw" id="gooseInput" placeholder="输入当前余额（元）" min="0" style="margin:0">
+      <button class="btn btn-gold btn-sm" onclick="updateGoose()" style="flex-shrink:0">更新</button>
+    </div>
+  </div>
+
+  <!-- interest calc -->
+  <div class="card" style="background:var(--gold-l)">
+    <div class="ct" style="color:var(--gold-d)">🥚 月底小金蛋计算</div>
+    <div class="gcalc-row">
+      <span class="gcalc-label">当前余额</span>
+      <span class="gcalc-val" id="gcBal">0 元</span>
+    </div>
+    <div class="gcalc-row">
+      <span class="gcalc-label">小金蛋利息（余额 × 3%）</span>
+      <span class="gcalc-val" style="color:var(--gold-d)" id="gcInterest">0 元</span>
+    </div>
+    <div class="gcalc-row">
+      <span class="gcalc-label">里程碑奖励</span>
+      <span class="gcalc-val" style="color:var(--gold-d)" id="gcMsBonus">0 元</span>
+    </div>
+    <div class="gcalc-row" style="border-top:2px solid var(--gold);margin-top:4px;padding-top:10px">
+      <span style="font-size:14px;font-weight:800;color:var(--gold-d)">小金蛋合计</span>
+      <span style="font-size:20px;font-weight:900;color:var(--gold-d)" id="gcTotal">0 元</span>
+    </div>
+    <div style="font-size:11px;color:var(--gold-d);margin-top:8px">四舍五入，不足1元也奖励1元 · 小金蛋自动放回金鹅账户</div>
+    <button class="btn btn-gold mt12" onclick="settleGoose()">🥚 月底结算小金蛋</button>
+  </div>
+
+  <!-- milestones -->
+  <div class="card">
+    <div class="ct" style="color:var(--gold-d)">🏆 里程碑奖励（每个只奖一次）</div>
+    <div id="msList"></div>
+  </div>
+
+  <!-- goose history -->
+  <div class="card">
+    <div class="ct">📋 金鹅记录</div>
+    <div id="gooseLog"></div>
+  </div>
+</div>
+
+<!-- ── 历史页 ── -->
+<div id="pgHistory" class="page">
+  <div class="bar">
+    <div class="bar-title">📅 历史记录</div>
+  </div>
+  <div style="padding-top:8px" id="histList"></div>
+</div>
+
+<!-- ── 设置页 ── -->
+<div id="pgSettings" class="page">
+  <div class="bar"><div class="bar-title">⚙️ 设置</div></div>
+  <div style="margin:14px">
+    <div style="border-radius:13px;overflow:hidden;box-shadow:var(--sh)">
+      <div class="setting-row" onclick="openMo('moPin')">
+        <div class="si" style="background:#FCE4EC">🔑</div>
+        <div style="flex:1;font-size:14px;font-weight:700">修改密码</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+      <div class="setting-row" onclick="openMo('moNewWeek')">
+        <div class="si" style="background:#E8F5E9">📅</div>
+        <div style="flex:1;font-size:14px;font-weight:700">开始新的一周</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+      <div class="setting-row" onclick="openMo('moImmune')">
+        <div class="si" style="background:#FFF3E0">🛡️</div>
+        <div style="flex:1;font-size:14px;font-weight:700">免死金牌管理</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+      <div class="setting-row" onclick="openRules()">
+        <div class="si" style="background:#E3F2FD">📖</div>
+        <div style="flex:1;font-size:14px;font-weight:700">查看 / 编辑积分规则</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+      <div class="setting-row" onclick="exportData()">
+        <div class="si" style="background:#F3E5F5">📤</div>
+        <div style="flex:1;font-size:14px;font-weight:700">导出数据备份</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+      <div class="setting-row" onclick="openMo('moReset')">
+        <div class="si" style="background:#FFEBEE">🗑️</div>
+        <div style="flex:1;font-size:14px;font-weight:700;color:var(--red)">重置所有数据</div>
+        <div style="color:var(--gray);font-size:14px">›</div>
+      </div>
+    </div>
+
+    <div class="card mt12" style="font-size:12px;color:var(--gray);line-height:2">
+      基础分 75分/周 · 积分上限 100分<br>
+      每周最多记录 3 个亮点，2 个越界<br>
+      结算日：每周日晚<br>
+      小金蛋：月初余额 × 3%（不足1元奖1元）<br>
+      免死金牌：每月1张，整月未用 +5分<br>
+      诚信类扣分不可使用免死金牌
+    </div>
+    <div style="font-size:11px;color:var(--gray);text-align:center;margin-top:12px">
+      Chloe 家庭积分 v3.0 💕<br>规则由妈妈和 Chloe 共同商定
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bnav">
+  <button class="ni on" onclick="nav('pgScore')" id="ni-pgScore"><span class="ic">⭐</span>积分</button>
+  <button class="ni" onclick="nav('pgGoose')" id="ni-pgGoose"><span class="ic">🦢</span>金鹅</button>
+  <button class="ni" onclick="nav('pgHistory')" id="ni-pgHistory"><span class="ic">📅</span>历史</button>
+  <button class="ni" onclick="nav('pgSettings')" id="ni-pgSettings"><span class="ic">⚙️</span>设置</button>
+</nav>
+</div><!-- end main -->
+
+<!-- ══ MODALS ══ -->
+
+<!-- Add Entry -->
+<div class="mo" id="moAdd">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle">记录亮点 / 越界</div>
+  <div class="tabs">
+    <button class="tab on" onclick="setAT('p')" id="tabP">⭐ 亮点加分</button>
+    <button class="tab" onclick="setAT('m')" id="tabM">⚠️ 越界扣分</button>
+  </div>
+  <div class="fg">
+    <label class="fl">快速选择规则（可选）</label>
+    <div class="chips" id="addChips"></div>
+  </div>
+  <div class="fg">
+    <label class="fl">描述</label>
+    <textarea class="fi fta" id="addDesc" placeholder="描述发生了什么..."></textarea>
+  </div>
+  <div class="fg">
+    <label class="fl">积分</label>
+    <input type="number" class="fi" id="addPts" placeholder="例如：3" min="1" max="25">
+  </div>
+  <div class="fg">
+    <label class="fl">日期</label>
+    <input type="date" class="fi" id="addDate">
+  </div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moAdd')">取消</button>
+    <button class="btn btn-pink" style="flex:2" id="addBtn" onclick="submitEntry()">确认记录</button>
+  </div>
+</div></div>
+
+<!-- Review Modal -->
+<div class="mo" id="moReview">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle" id="reviewTitle">周日复盘</div>
+  <div id="reviewBody"></div>
+  <button class="btn btn-gray mt12" onclick="closeMo('moReview')">关闭</button>
+</div></div>
+
+<!-- History Detail -->
+<div class="mo" id="moHistDetail">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle" id="histDetailTitle"></div>
+  <div id="histDetailBody"></div>
+  <button class="btn btn-gray mt12" onclick="closeMo('moHistDetail')">关闭</button>
+</div></div>
+
+<!-- Lock -->
+<div class="mo" id="moLock">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle tc">🔒 锁定应用</div>
+  <div style="font-size:13px;color:var(--gray);text-align:center;margin-bottom:16px">需要密码才能重新进入</div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moLock')">取消</button>
+    <button class="btn btn-pink" style="flex:2" onclick="doLock()">确认锁定</button>
+  </div>
+</div></div>
+
+<!-- Change PIN -->
+<div class="mo" id="moPin">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle">🔑 修改密码</div>
+  <div class="fg"><label class="fl">当前密码</label><input type="password" class="fi" id="oldPin" maxlength="4" placeholder="4位数字"></div>
+  <div class="fg"><label class="fl">新密码</label><input type="password" class="fi" id="newPin" maxlength="4" placeholder="4位数字"></div>
+  <div class="fg"><label class="fl">确认新密码</label><input type="password" class="fi" id="cfPin" maxlength="4" placeholder="4位数字"></div>
+  <div class="perr" id="pinErr"></div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moPin')">取消</button>
+    <button class="btn btn-pink" style="flex:2" onclick="changePin()">确认修改</button>
+  </div>
+</div></div>
+
+<!-- New Week -->
+<div class="mo" id="moNewWeek">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle">📅 开始新的一周</div>
+  <div style="font-size:13px;color:var(--gray);margin-bottom:16px;line-height:1.7">
+    当前周数据将存入历史记录，积分重置为基础分。<br>建议先完成周日复盘再执行。
+  </div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moNewWeek')">取消</button>
+    <button class="btn btn-green" style="flex:2" onclick="startNewWeek()">确认开始新一周</button>
+  </div>
+</div></div>
+
+<!-- Immune -->
+<div class="mo" id="moImmune">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle">🛡️ 免死金牌</div>
+  <div id="immuneBody"></div>
+  <button class="btn btn-gray mt12" onclick="closeMo('moImmune')">关闭</button>
+</div></div>
+
+<!-- Rules -->
+<div class="mo" id="moRules">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle row jb" style="display:flex;align-items:center;justify-content:space-between">
+    <span>积分规则</span>
+    <button class="btn btn-sm btn-gray" onclick="toggleEditRules()" id="editRuleBtn">✏️ 编辑</button>
+  </div>
+  <div id="rulesBody"></div>
+  <button class="btn btn-gray mt12" onclick="closeMo('moRules')">关闭</button>
+</div></div>
+
+<!-- Add Rule -->
+<div class="mo" id="moAddRule">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle">添加规则</div>
+  <div class="fg"><label class="fl">描述</label><input type="text" class="fi" id="ruleDesc" placeholder="规则内容"></div>
+  <div class="fg"><label class="fl">分类</label>
+    <select class="fi" id="ruleCat">
+      <option>学习进步</option><option>兴趣发展</option><option>家务与责任</option>
+      <option>品格与成长</option><option>理财好习惯</option>
+      <option>屏幕越界</option><option>责任逃避</option><option>诚信与尊重</option>
+    </select>
+  </div>
+  <div class="fg"><label class="fl">积分（加分填正数，扣分填负数）</label>
+    <input type="number" class="fi" id="rulePts" placeholder="如 3 或 -5">
+  </div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moAddRule')">取消</button>
+    <button class="btn btn-pink" style="flex:2" onclick="submitRule()">添加</button>
+  </div>
+</div></div>
+
+<!-- Reset -->
+<div class="mo" id="moReset">
+<div class="mbox">
+  <div class="mhandle"></div>
+  <div class="mtitle" style="color:var(--red)">⚠️ 重置所有数据</div>
+  <div style="font-size:13px;color:var(--gray);margin-bottom:16px">
+    将清除所有积分记录、历史和金鹅数据。此操作不可撤销。密码将保留。
+  </div>
+  <div class="row" style="gap:8px">
+    <button class="btn btn-gray fw" onclick="closeMo('moReset')">取消</button>
+    <button class="btn btn-red" style="flex:2" onclick="doReset()">确认重置</button>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA & DEFAULTS
+// ══════════════════════════════════════════════════════════════════════════════
+
+const DEF_RULES = {
+  bonus: [
+    {id:'b1',cat:'学习进步',desc:'主动参加比赛/活动',pts:5},
+    {id:'b2',cat:'学习进步',desc:'考试成绩明显提升',pts:5},
+    {id:'b3',cat:'学习进步',desc:'老师表扬/明显努力',pts:5},
+    {id:'b4',cat:'学习进步',desc:'遇到难题不逃避，主动想办法',pts:3},
+    {id:'b5',cat:'兴趣发展',desc:'下一局围棋（完成一局）',pts:2},
+    {id:'b6',cat:'兴趣发展',desc:'主动复盘/看棋谱',pts:3},
+    {id:'b7',cat:'兴趣发展',desc:'整周坚持做翻转拍（额外）',pts:3},
+    {id:'b8',cat:'家务与责任',desc:'主动承担额外家务',pts:3},
+    {id:'b9',cat:'家务与责任',desc:'主动帮忙收拾餐桌/厨房',pts:2},
+    {id:'b10',cat:'家务与责任',desc:'主动帮助家人完成大事',pts:5},
+    {id:'b11',cat:'家务与责任',desc:'主动打扫清洁房间',pts:3},
+    {id:'b12',cat:'品格与成长',desc:'主动承认错误并说明实情',pts:5},
+    {id:'b13',cat:'理财好习惯',desc:'每周认真完成积分记账结算',pts:3},
+    {id:'b14',cat:'理财好习惯',desc:'收到红包/额外收入后主动记录',pts:3},
+    {id:'b15',cat:'理财好习惯',desc:'先把钱放入梦想存钱罐/金鹅',pts:3},
+    {id:'b16',cat:'理财好习惯',desc:'坚持完成一个月小账本',pts:5},
+    {id:'b17',cat:'理财好习惯',desc:'主动管理金鹅账户',pts:3},
+  ],
+  penalty: [
+    {id:'p1',cat:'屏幕越界',desc:'屏幕超时5-10分钟',pts:-2},
+    {id:'p2',cat:'屏幕越界',desc:'屏幕超时10-30分钟',pts:-3},
+    {id:'p3',cat:'屏幕越界',desc:'屏幕超时30分钟以上',pts:-8},
+    {id:'p4',cat:'屏幕越界',desc:'学习/睡前时间偷偷使用屏幕',pts:-5},
+    {id:'p5',cat:'屏幕越界',desc:'吃饭时看屏幕',pts:-3},
+    {id:'p6',cat:'责任逃避',desc:'作业拖延，被提醒3次以上',pts:-5},
+    {id:'p7',cat:'责任逃避',desc:'故意不完成作业/抄袭',pts:-8},
+    {id:'p8',cat:'责任逃避',desc:'作业明显敷衍，需要返工',pts:-3},
+    {id:'p9',cat:'责任逃避',desc:'答应的任务故意不做',pts:-3},
+    {id:'p10',cat:'责任逃避',desc:'学习时间偷偷玩游戏',pts:-5},
+    {id:'p11',cat:'诚信与尊重',desc:'撒谎/故意隐瞒事实',pts:-10},
+    {id:'p12',cat:'诚信与尊重',desc:'明显不尊重他人/恶劣语气',pts:-5},
+    {id:'p13',cat:'诚信与尊重',desc:'乱发脾气，拒绝沟通',pts:-3},
+  ]
+};
+
+const MILESTONES = [
+  {amt:100, reward:5,  label:'金鹅达到 100 元'},
+  {amt:300, reward:10, label:'金鹅达到 300 元'},
+  {amt:500, reward:20, label:'金鹅达到 500 元'},
+  {amt:1000,reward:50, label:'金鹅达到 1000 元'},
+];
+
+function today(){ return new Date().toISOString().split('T')[0] }
+function monthKey(){ const d=new Date(); return `${d.getFullYear()}-${d.getMonth()}` }
+function getMonday(){
+  const d=new Date(), day=d.getDay();
+  d.setDate(d.getDate()-day+(day===0?-6:1));
+  return d.toISOString().split('T')[0];
+}
+
+function freshWeek(n, start){
+  return { weekNum:n, startDate:start, entries:[], settled:false };
+}
+
+const DEFAULTS = {
+  pin: '1234',
+  week: freshWeek(1, getMonday()),
+  history: [],
+  rules: JSON.parse(JSON.stringify(DEF_RULES)),
+  goose: { balance:0, log:[], milestonesDone:[] },
+  immune: { used:false, month: monthKey() },
+};
+
+// Load or init
+let D = (() => {
+  try { const s = localStorage.getItem('chloe3'); if(s) return JSON.parse(s); }
+  catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+})();
+
+// Migrations / safety
+if(!D.rules) D.rules = JSON.parse(JSON.stringify(DEF_RULES));
+if(!D.goose) D.goose = {balance:0, log:[], milestonesDone:[]};
+if(!D.immune) D.immune = {used:false, month:monthKey()};
+if(!D.week.entries) D.week.entries = [];
+
+function save(){ localStorage.setItem('chloe3', JSON.stringify(D)) }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// PIN / LOCK
+// ══════════════════════════════════════════════════════════════════════════════
+let pin='';
+
+function pk(d){
+  if(pin.length>=4) return;
+  pin+=d; updDots();
+  if(pin.length===4) setTimeout(checkPin, 150);
+}
+function pdel(){ pin=pin.slice(0,-1); updDots(); document.getElementById('perr').textContent=''; }
+function updDots(){ for(let i=0;i<4;i++) document.getElementById('pd'+i).classList.toggle('on',i<pin.length); }
+
+function checkPin(){
+  if(pin===D.pin){
+    document.getElementById('lock').style.display='none';
+    document.getElementById('main').style.display='block';
+    pin=''; updDots(); renderAll();
+  } else {
+    document.getElementById('perr').textContent='密码错误，请重试';
+    pin=''; updDots();
+    setTimeout(()=>document.getElementById('perr').textContent='', 2000);
+  }
+}
+function doLock(){
+  closeMo('moLock');
+  document.getElementById('main').style.display='none';
+  document.getElementById('lock').style.display='flex';
+  pin=''; updDots();
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════════════════════════
+let curPage='pgScore';
+function nav(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById(pg).classList.add('on');
+  document.getElementById('ni-'+pg).classList.add('on');
+  curPage = pg;
+  if(pg==='pgScore') renderScore();
+  if(pg==='pgGoose') renderGoose();
+  if(pg==='pgHistory') renderHistory();
+}
+
+function renderAll(){ renderScore(); renderGoose(); renderHistory(); }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SCORE CALC
+// ══════════════════════════════════════════════════════════════════════════════
+function calcScore(entries){
+  let p=0, m=0;
+  entries.forEach(e=>{ if(e.pts>0) p+=e.pts; else m+=Math.abs(e.pts); });
+  return { total: Math.min(100, 75+p-m), plus:p, minus:m };
+}
+function getAllow(s){
+  if(s>=90) return {adj:+10, total:40, label:'非常棒！继续保持！', emoji:'🌟'};
+  if(s>=75) return {adj:0,   total:30, label:'表现正常，继续努力！', emoji:'😊'};
+  if(s>=60) return {adj:-5,  total:25, label:'有进步空间，一起加油！', emoji:'😐'};
+  return          {adj:-10, total:20, label:'需要反思，下周加油！', emoji:'😢'};
+}
+function scoreColor(s){ return s>=90?'#43A047':s>=75?'#1E88E5':s>=60?'#FB8C00':'#E53935'; }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// RENDER SCORE PAGE
+// ══════════════════════════════════════════════════════════════════════════════
+function renderScore(){
+  const w = D.week;
+  const {total, plus, minus} = calcScore(w.entries);
+  document.getElementById('heroScore').textContent = total;
+  document.getElementById('hPlus').textContent = plus;
+  document.getElementById('hMinus').textContent = minus;
+  document.getElementById('hBar').style.width = total+'%';
+  document.getElementById('sPlus').textContent = '+'+plus;
+  document.getElementById('sMinus').textContent = '−'+minus;
+  document.getElementById('weekLabel').textContent = `第 ${w.weekNum} 周 · ${w.startDate}`;
+  document.getElementById('eCnt').textContent = w.entries.length+'条';
+
+  const list = document.getElementById('entryList');
+  if(!w.entries.length){
+    list.innerHTML = '<div class="empty"><div class="ei">📝</div><div class="et">还没有记录<br>点击上方按钮添加</div></div>';
+    return;
+  }
+  list.innerHTML = [...w.entries].reverse().map(entryHTML).join('');
+}
+
+function entryHTML(e){
+  const p = e.pts > 0;
+  return `<div class="erow">
+    <div class="ebox ${p?'p':'m'}">${p?'⭐':'⚠️'}</div>
+    <div class="einfo">
+      <div class="edesc">${e.desc}</div>
+      <div class="emeta">${e.date}${e.cat?' · '+e.cat:''}</div>
+    </div>
+    <div class="epts ${p?'p':'m'}">${p?'+':''}${e.pts}</div>
+    <button class="edel" onclick="delEntry('${e.id}')">✕</button>
+  </div>`;
+}
+
+function delEntry(id){
+  if(!confirm('删除这条记录？')) return;
+  D.week.entries = D.week.entries.filter(e=>e.id!==id);
+  save(); renderScore(); toast('已删除');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ADD ENTRY
+// ══════════════════════════════════════════════════════════════════════════════
+let AT = 'p';
+
+function openAddMo(){
+  AT = 'p';
+  document.getElementById('tabP').classList.add('on');
+  document.getElementById('tabM').classList.remove('on');
+  document.getElementById('addBtn').className = 'btn btn-green';
+  document.getElementById('addDesc').value = '';
+  document.getElementById('addPts').value = '';
+  document.getElementById('addDate').value = today();
+  renderChips();
+  openMo('moAdd');
+}
+
+function setAT(t){
+  AT = t;
+  document.getElementById('tabP').classList.toggle('on', t==='p');
+  document.getElementById('tabM').classList.toggle('on', t==='m');
+  document.getElementById('addBtn').className = 'btn '+(t==='p'?'btn-green':'btn-red');
+  document.getElementById('addDesc').value = '';
+  document.getElementById('addPts').value = '';
+  renderChips();
+}
+
+function renderChips(){
+  const rules = AT==='p' ? D.rules.bonus : D.rules.penalty;
+  document.getElementById('addChips').innerHTML = rules.map(r =>
+    `<div class="chip ${AT}" data-id="${r.id}" onclick="pickChip(this,'${r.id}')">${r.desc} <b>${r.pts>0?'+':''}${r.pts}</b></div>`
+  ).join('');
+}
+
+function pickChip(el, id){
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  const r = (AT==='p'?D.rules.bonus:D.rules.penalty).find(r=>r.id===id);
+  if(r){ document.getElementById('addDesc').value=r.desc; document.getElementById('addPts').value=Math.abs(r.pts); }
+}
+
+function submitEntry(){
+  const desc = document.getElementById('addDesc').value.trim();
+  const ptsRaw = parseInt(document.getElementById('addPts').value);
+  const date = document.getElementById('addDate').value;
+  if(!desc){ toast('请填写描述'); return; }
+  if(isNaN(ptsRaw)||ptsRaw<=0){ toast('请填写有效积分'); return; }
+
+  const entries = D.week.entries;
+  const plusCnt = entries.filter(e=>e.pts>0).length;
+  const minusCnt = entries.filter(e=>e.pts<0).length;
+  if(AT==='p' && plusCnt>=3){ toast('本周亮点已达上限（3个）'); return; }
+  if(AT==='m' && minusCnt>=2){ toast('本周越界已达上限（2个）'); return; }
+
+  const sel = document.querySelector('.chip.sel');
+  let cat = '';
+  if(sel){ const r=(AT==='p'?D.rules.bonus:D.rules.penalty).find(r=>r.id===sel.dataset.id); if(r) cat=r.cat; }
+
+  const pts = AT==='p' ? ptsRaw : -ptsRaw;
+  D.week.entries.push({ id: Date.now()+'', desc, pts, date, cat });
+  save(); closeMo('moAdd'); renderScore();
+  toast(AT==='p' ? '✅ 亮点已记录！' : '⚠️ 越界已记录！');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// REVIEW
+// ══════════════════════════════════════════════════════════════════════════════
+function goReview(){
+  const w = D.week;
+  const {total, plus, minus} = calcScore(w.entries);
+  const allow = getAllow(total);
+  const sc = scoreColor(total);
+
+  // Wallet split suggestion (50% dream, 40% spend, 10% share)
+  const base = allow.total;
+  const dream = Math.round(base*0.50);
+  const spend = Math.round(base*0.40);
+  const share = base - dream - spend;
+
+  document.getElementById('reviewTitle').textContent = `第 ${w.weekNum} 周 · 复盘结算`;
+  document.getElementById('reviewBody').innerHTML = `
+    <div style="background:${sc};border-radius:18px;padding:20px;text-align:center;color:#fff;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;opacity:.9">本周最终得分</div>
+      <div style="font-size:64px;font-weight:900;line-height:1.1">${total}</div>
+      <div style="font-size:13px;opacity:.9">${allow.emoji} ${allow.label}</div>
+    </div>
+
+    <div style="background:var(--green-l);border-radius:16px;padding:18px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:800;color:var(--green-d);margin-bottom:10px">💰 本周零花钱 · 转账金额</div>
+      <div class="allow-row"><span class="allow-label">合计零花钱</span><span class="allow-val" style="font-size:20px;color:var(--green-d)">¥${allow.total} 元</span></div>
+      <div class="allow-row"><span class="allow-label">🐷 梦想存钱罐（50%）</span><span class="allow-val" style="color:var(--green-d)">¥${dream} 元</span></div>
+      <div class="allow-row"><span class="allow-label">👜 花钱包（40%）</span><span class="allow-val" style="color:var(--green-d)">¥${spend} 元</span></div>
+      <div class="allow-row" style="border-bottom:none"><span class="allow-label">🎁 分享盒（10%）</span><span class="allow-val" style="color:var(--green-d)">¥${share} 元</span></div>
+      <div style="font-size:11px;color:var(--green-d);margin-top:8px;opacity:.8">比例供参考，可根据 Chloe 意愿调整 · 金鹅另外单独转入</div>
+    </div>
+
+    <div style="background:var(--blue-l);border-radius:14px;padding:14px;margin-bottom:14px;font-size:13px;color:var(--blue-d)">
+      <div style="font-weight:800;margin-bottom:6px">📊 本周得分明细</div>
+      基础分 75 + 加分 ${plus} − 扣分 ${minus} = <b>${total} 分</b><br>
+      ${total>=90?'奖励 +10 元':total>=75?'金额不变':total>=60?'扣减 −5 元':'扣减 −10 元'}
+    </div>
+
+    <div class="card" style="margin:0 0 4px">
+      <div class="ct">📋 本周记录</div>
+      ${w.entries.length ? [...w.entries].map(entryHTML).join('') : '<div class="empty" style="padding:16px 0"><div class="et">本周无记录</div></div>'}
+    </div>
+
+    ${!w.settled
+      ? `<button class="btn btn-pink mt8" onclick="settleWeek()">✅ 确认结算本周</button>`
+      : `<div style="background:var(--green-l);border-radius:12px;padding:12px;text-align:center;color:var(--green-d);font-weight:700;font-size:13px;margin-top:8px">✅ 本周已结算</div>`
+    }
+  `;
+  openMo('moReview');
+}
+
+function settleWeek(){
+  D.week.settled = true;
+  save(); renderScore(); goReview();
+  toast('🎉 本周结算完成！');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// GOLDEN GOOSE
+// ══════════════════════════════════════════════════════════════════════════════
+function renderGoose(){
+  const g = D.goose;
+  const bal = g.balance;
+  const interest = Math.max(1, Math.round(bal * 0.03));
+  const msBonus = MILESTONES
+    .filter((_,i) => g.milestonesDone.includes(i) && !g.milestonesDone.includes('s'+i))
+    .reduce((s,m) => s+m.reward, 0);
+  const eggTotal = bal > 0 ? interest + msBonus : 0;
+
+  document.getElementById('gooseHero').textContent = bal;
+  document.getElementById('gcBal').textContent = bal+' 元';
+  document.getElementById('gcInterest').textContent = (bal>0?interest:0)+' 元';
+  document.getElementById('gcMsBonus').textContent = msBonus+' 元';
+  document.getElementById('gcTotal').textContent = eggTotal+' 元';
+
+  // milestones
+  document.getElementById('msList').innerHTML = MILESTONES.map((m,i) => {
+    const done = g.milestonesDone.includes(i);
+    return `<div class="ms-row">
+      <div class="ms-check ${done?'done':''}" onclick="toggleMs(${i})">${done?'✓':''}</div>
+      <div class="ms-label">${m.label}</div>
+      <div class="ms-reward">+${m.reward} 元</div>
+    </div>`;
+  }).join('');
+
+  // log
+  const logEl = document.getElementById('gooseLog');
+  if(!g.log.length){
+    logEl.innerHTML = '<div class="empty" style="padding:16px 0"><div class="et">暂无记录</div></div>';
+    return;
+  }
+  logEl.innerHTML = [...g.log].reverse().slice(0,15).map(l => `
+    <div class="erow">
+      <div class="ebox p">🦢</div>
+      <div class="einfo">
+        <div class="edesc">${l.note}</div>
+        <div class="emeta">${l.date}</div>
+      </div>
+      <div class="epts p">+${l.amt}</div>
+    </div>
+  `).join('');
+}
+
+function updateGoose(){
+  const val = parseFloat(document.getElementById('gooseInput').value);
+  if(isNaN(val)||val<0){ toast('请输入有效金额'); return; }
+  D.goose.balance = val;
+  document.getElementById('gooseInput').value = '';
+  // check milestones
+  MILESTONES.forEach((m,i) => {
+    if(val >= m.amt && !D.goose.milestonesDone.includes(i)){
+      D.goose.milestonesDone.push(i);
+      toast(`🏆 里程碑达成：${m.label}！奖励+${m.reward}元小金蛋`);
+    }
+  });
+  save(); renderGoose(); toast('余额已更新');
+}
+
+function toggleMs(i){
+  const arr = D.goose.milestonesDone;
+  if(arr.includes(i)) D.goose.milestonesDone = arr.filter(x=>x!==i);
+  else arr.push(i);
+  save(); renderGoose();
+}
+
+function settleGoose(){
+  const g = D.goose;
+  if(g.balance <= 0){ toast('余额为0，无法结算'); return; }
+  const interest = Math.max(1, Math.round(g.balance * 0.03));
+  const msBonus = MILESTONES
+    .filter((_,i) => g.milestonesDone.includes(i) && !g.milestonesDone.includes('s'+i))
+    .reduce((s,m) => s+m.reward, 0);
+  const total = interest + msBonus;
+  if(!confirm(`月底小金蛋结算\n\n利息：${interest} 元\n里程碑奖励：${msBonus} 元\n合计：${total} 元\n\n确认将小金蛋放入金鹅账户？`)) return;
+  g.balance += total;
+  g.log.push({ date:today(), amt:total, note:`小金蛋：利息${interest}元 + 里程碑${msBonus}元` });
+  // mark milestones settled
+  MILESTONES.forEach((_,i) => { if(g.milestonesDone.includes(i) && !g.milestonesDone.includes('s'+i)) g.milestonesDone.push('s'+i); });
+  save(); renderGoose();
+  toast(`🥚 小金蛋 +${total} 元已放入金鹅账户！`);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HISTORY
+// ══════════════════════════════════════════════════════════════════════════════
+function renderHistory(){
+  const list = document.getElementById('histList');
+  if(!D.history.length){
+    list.innerHTML = '<div class="empty" style="padding-top:60px"><div class="ei">📚</div><div class="et">还没有历史记录</div></div>';
+    return;
+  }
+  list.innerHTML = [...D.history].reverse().map((w,ri) => {
+    const {total} = calcScore(w.entries);
+    const allow = getAllow(total);
+    const idx = D.history.length-1-ri;
+    return `<div class="hw" onclick="showHistDetail(${idx})">
+      <div class="hwsc" style="background:${scoreColor(total)}">${total}</div>
+      <div style="flex:1">
+        <div class="hwdate">第 ${w.weekNum} 周 · ${w.startDate}</div>
+        <div class="hwtitle">${allow.emoji} ${allow.label}</div>
+      </div>
+      <div class="hwallow">¥${allow.total}</div>
+    </div>`;
+  }).join('');
+}
+
+function showHistDetail(idx){
+  const w = D.history[idx];
+  const {total, plus, minus} = calcScore(w.entries);
+  const allow = getAllow(total);
+  document.getElementById('histDetailTitle').textContent = `第 ${w.weekNum} 周 详情`;
+  document.getElementById('histDetailBody').innerHTML = `
+    <div style="text-align:center;padding:14px 0;border-bottom:1px solid #F0F0F0;margin-bottom:12px">
+      <div style="font-size:52px;font-weight:900;color:${scoreColor(total)}">${total}</div>
+      <div style="color:var(--gray);font-size:13px">零花钱 ¥${allow.total} · 加 ${plus} 扣 ${minus}</div>
+    </div>
+    <div class="ct">本周记录</div>
+    ${w.entries.length ? w.entries.map(entryHTML).join('') : '<div class="empty" style="padding:12px 0"><div class="et">无记录</div></div>'}
+  `;
+  openMo('moHistDetail');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════════════════════════════
+function changePin(){
+  const o=document.getElementById('oldPin').value;
+  const n=document.getElementById('newPin').value;
+  const c=document.getElementById('cfPin').value;
+  const err=document.getElementById('pinErr');
+  if(o!==D.pin){ err.textContent='当前密码不正确'; return; }
+  if(!/^\d{4}$/.test(n)){ err.textContent='新密码须为4位数字'; return; }
+  if(n!==c){ err.textContent='两次密码不一致'; return; }
+  D.pin=n; save(); closeMo('moPin');
+  ['oldPin','newPin','cfPin'].forEach(id=>document.getElementById(id).value='');
+  err.textContent='';
+  toast('🔑 密码已修改');
+}
+
+function startNewWeek(){
+  D.history.push({...D.week, entries:[...D.week.entries]});
+  const mon = getMonday();
+  D.week = freshWeek(D.week.weekNum+1, mon);
+  save(); closeMo('moNewWeek'); nav('pgScore');
+  toast('🎉 新一周开始！');
+}
+
+// Immune
+function openMo_immune(){
+  const mk = monthKey();
+  if(D.immune.month !== mk) D.immune = {used:false, month:mk};
+  const used = D.immune.used;
+  document.getElementById('immuneBody').innerHTML = `
+    <div style="text-align:center;padding:16px 0">
+      <div style="font-size:52px">${used?'🔓':'🛡️'}</div>
+      <div style="font-size:17px;font-weight:800;margin:8px 0;color:${used?'var(--gray)':'var(--gold-d)'}">本月${used?'已使用':'尚未使用'}</div>
+      <div style="font-size:12px;color:var(--gray);line-height:1.7">
+        可免除任意一次普通扣分（诚信类除外）<br>整月未用额外奖励 +5 分
+      </div>
+    </div>
+    ${!used
+      ? `<button class="btn btn-gold" onclick="useImmune()">使用免死金牌（免除最近一次扣分）</button>`
+      : `<div style="background:var(--gray-l);border-radius:12px;padding:12px;text-align:center;color:var(--gray);font-size:13px;font-weight:700">本月已使用</div>`
+    }
+  `;
+}
+
+function useImmune(){
+  const entries = D.week.entries;
+  const candidates = entries.map((e,i)=>({e,i})).filter(({e})=>e.pts<0 && !e.cat?.includes('诚信'));
+  if(!candidates.length){ toast('没有可免除的扣分（诚信类除外）'); return; }
+  const last = candidates[candidates.length-1];
+  if(!confirm(`使用免死金牌，免除"${last.e.desc}"的扣分？`)) return;
+  D.week.entries.splice(last.i, 1);
+  D.immune.used = true;
+  save(); closeMo('moImmune'); renderScore();
+  toast('🛡️ 免死金牌已使用！');
+}
+
+// Rules
+let editingRules = false;
+function openRules(){ editingRules=false; document.getElementById('editRuleBtn').textContent='✏️ 编辑'; renderRules(); openMo('moRules'); }
+function toggleEditRules(){ editingRules=!editingRules; document.getElementById('editRuleBtn').textContent=editingRules?'✅ 完成':'✏️ 编辑'; renderRules(); }
+
+function renderRules(){
+  const cats_b = [...new Set(D.rules.bonus.map(r=>r.cat))];
+  const cats_p = [...new Set(D.rules.penalty.map(r=>r.cat))];
+  let h = '';
+
+  h += `<div class="cat-label" style="background:var(--green-l);color:var(--green-d)">⭐ 加分参考菜单</div>`;
+  cats_b.forEach(cat => {
+    h += `<div style="font-size:11px;font-weight:800;color:var(--green-d);margin:8px 0 4px">${cat}</div>`;
+    D.rules.bonus.filter(r=>r.cat===cat).forEach(r => {
+      h += `<div class="rule-row">
+        <div class="rule-desc">${r.desc}</div>
+        <div class="rule-pts p">+${r.pts}</div>
+        ${editingRules?`<button class="rule-del" onclick="delRule('bonus','${r.id}')">✕</button>`:''}
+      </div>`;
+    });
+  });
+
+  h += `<div class="cat-label" style="background:var(--red-l);color:var(--red-d);margin-top:14px">⚠️ 扣分参考菜单</div>`;
+  cats_p.forEach(cat => {
+    h += `<div style="font-size:11px;font-weight:800;color:var(--red-d);margin:8px 0 4px">${cat}</div>`;
+    D.rules.penalty.filter(r=>r.cat===cat).forEach(r => {
+      h += `<div class="rule-row">
+        <div class="rule-desc">${r.desc}</div>
+        <div class="rule-pts m">${r.pts}</div>
+        ${editingRules?`<button class="rule-del" onclick="delRule('penalty','${r.id}')">✕</button>`:''}
+      </div>`;
+    });
+  });
+
+  if(editingRules) h += `<button class="btn btn-green btn-sm mt12 mb8" onclick="openAddRuleModal()">＋ 添加新规则</button>`;
+  document.getElementById('rulesBody').innerHTML = h;
+}
+
+function delRule(type, id){
+  if(!confirm('删除此规则？')) return;
+  D.rules[type] = D.rules[type].filter(r=>r.id!==id);
+  save(); renderRules(); toast('已删除');
+}
+function openAddRuleModal(){ document.getElementById('ruleDesc').value=''; document.getElementById('rulePts').value=''; openMo('moAddRule'); }
+function submitRule(){
+  const desc = document.getElementById('ruleDesc').value.trim();
+  const pts = parseInt(document.getElementById('rulePts').value);
+  const cat = document.getElementById('ruleCat').value;
+  if(!desc||isNaN(pts)){ toast('请填写完整'); return; }
+  const rule = {id:'r'+Date.now(), cat, desc, pts};
+  if(pts>0) D.rules.bonus.push(rule); else D.rules.penalty.push(rule);
+  save(); closeMo('moAddRule'); renderRules(); toast('规则已添加');
+}
+
+function exportData(){
+  const b = new Blob([JSON.stringify(D,null,2)], {type:'application/json'});
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a');
+  a.href=u; a.download=`chloe_${today()}.json`; a.click();
+  toast('数据已导出');
+}
+
+function doReset(){
+  const pin = D.pin;
+  D = JSON.parse(JSON.stringify(DEFAULTS));
+  D.pin = pin;
+  save(); closeMo('moReset'); renderAll();
+  toast('数据已重置');
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// MODAL HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+function openMo(id){
+  if(id==='moImmune') openMo_immune();
+  document.getElementById(id).classList.add('open');
+}
+function closeMo(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.mo').forEach(m => m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); }));
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════════════════
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════════════
+renderScore();
+</script>
+</body>
+</html>
